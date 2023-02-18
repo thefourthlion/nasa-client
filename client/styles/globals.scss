@@ -1,0 +1,29 @@
+@import "./Variables.scss";
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@900&display=swap");
+
+* {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: $light-gray;
+  text-align: center;
+  color: $light-black;
+  //   text-shadow: 1px 1px $light-black;
+  font-family: "Poppins", sans-serif;
+
+  button {
+    border: 4px solid $light-black;
+    border-radius: 25px;
+    height: 45px;
+    font-size: 17px;
+    width: 125px;
+    font-weight: bold;
+    color: $light-black;
+    padding-top: 2px;
+    font-family: "Poppins", sans-serif;
+    cursor: pointer;
+  }
+}

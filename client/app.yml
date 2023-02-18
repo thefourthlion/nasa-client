@@ -1,0 +1,1 @@
+apps: - script: ./server.js cwd: /home/application/client/ name: "application" interpreter: /usr/bin/node

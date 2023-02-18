@@ -1,0 +1,56 @@
+@import "./Variables.scss";
+
+.DateForm {
+  .content-header {
+    margin-top: 25px;
+  }
+
+  button {
+    width: 250px;
+    height: 55px;
+    margin-bottom: 25px;
+    background-color: $stark-white;
+  }
+
+  button:hover {
+    box-shadow: 9px 9px 4px -6px hsla(0, 0%, 0%, 0.3);
+  }
+
+  .nasa-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    height: 80vh;
+    width: auto;
+    // width: 80vw;
+    padding: 0px;
+
+    object-fit: contain;
+  }
+
+  .img-border {
+    border-radius: 10px;
+    border: 4px solid $light-black;
+  }
+
+  .date-choice {
+    // background-color: $white;
+    border: 4px solid $light-black;
+    border-radius: 25px;
+    height: 55px;
+    margin: 25px 0;
+    width: 250px;
+    padding: 0 20px;
+  }
+
+  .title {
+    margin: 25px 0;
+  }
+
+  .explanation {
+    margin: 0 auto;
+    max-width: 70vw;
+    margin-bottom: 25px;
+  }
+}
