@@ -1,6 +1,13 @@
 @import "./Variables.scss";
 
-.DateForm {
+.ApodDateForm {
+  margin-top: 100px;
+  margin-bottom: 75px;
+  min-height: 55vh;
+
+  @media (max-width: 900px) {
+    margin-top: 160px;
+  }
   .content-header {
     margin-top: 25px;
   }

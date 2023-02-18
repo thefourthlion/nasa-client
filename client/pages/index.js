@@ -1,11 +1,9 @@
-import ApodImage from "../components/ApodImage";
-import DateForm from "../components/DateForm";
-
+import ApodDateForm from "../components/ApodDateForm";
+import EpicDateForm from "../components/EpicDateForm";
 export default function Home() {
   return (
     <div className="Home">
-      <ApodImage />
-      <DateForm />
+      <ApodDateForm />
     </div>
   );
 }

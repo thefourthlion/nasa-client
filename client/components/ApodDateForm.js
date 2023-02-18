@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
-
-const DateForm = () => {
+const key = "fZZsNoM9UQAPoTXWMG3Uf5Yi0qiGIVDTdYSynBgS";
+const ApodDateForm = () => {
   const [chosenDate, setChosenDate] = useState("");
 
   const [apodData, setApodData] = useState({});
@@ -12,25 +12,17 @@ const DateForm = () => {
 
   const todaysDate = `${yyyy}-${mm}-${dd}`;
 
-  // useEffect(() => {
-  //   setChosenDate(todaysDate);
-  // });
-
   const getImage = () => {
     Axios.get(
-      `https://api.nasa.gov/planetary/apod?date=${chosenDate}&api_key=fZZsNoM9UQAPoTXWMG3Uf5Yi0qiGIVDTdYSynBgS`
+      `https://api.nasa.gov/planetary/apod?date=${chosenDate}&api_key=${key}`
     ).then((res) => {
       const data = res.data;
       setApodData(data);
     });
   };
 
-  // useState(() => {
-  //   getImage();
-  // });
-
   return (
-    <div className="DateForm">
+    <div className="ApodDateForm">
       <div className="container">
         <h1 className="content-header">Astronomy Picture Of The Day</h1>
         <input
@@ -58,4 +50,4 @@ const DateForm = () => {
     </div>
   );
 };
-export default DateForm;
+export default ApodDateForm;
