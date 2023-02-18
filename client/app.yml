@@ -1,1 +1,5 @@
-apps: - script: ./server.js cwd: /home/application/client/ name: "application" interpreter: /usr/bin/node
+apps:
+  - script: ./server.js
+    cwd: /home/nasa-client/client/
+    name: "nasa-client" 
+    interpreter: /usr/bin/node
