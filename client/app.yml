@@ -1,5 +1,5 @@
 apps:
   - script: ./server.js
-    cwd: /home/nasa-client/client/
+    cwd: /home/everettdeleon/nasa-client/client/
     name: "nasa-client" 
     interpreter: /usr/bin/node
