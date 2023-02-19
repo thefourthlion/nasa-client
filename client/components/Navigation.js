@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import Link from "next/link";
-
+import Image from "next/image";
 export default function Navigation() {
   const [copied, setCopied] = useState(false);
 
@@ -18,16 +18,23 @@ export default function Navigation() {
       >
         <li>
           <Link href="/" className="phone-none">
-            NASA
+            <Image
+              className="nasa-logo"
+              src="/images/nasa-icon.png"
+              alt="logo"
+              width={45}
+              height={45}
+            />
           </Link>
         </li>
 
         <li className="nav-item">
           <Link href="/Apod">APOD</Link>
         </li>
-        <li className="nav-item">
+
+        {/* <li className="nav-item">
           <Link href="/Epic">EPIC</Link>
-        </li>
+        </li> */}
 
         <li className="nav-item">
           <Link href="/Mrp">MRP</Link>
@@ -37,7 +44,13 @@ export default function Navigation() {
       <Link href="/" className="pc-none"></Link>
 
       <Link href="/" className="pc-none">
-        <h1 className="nav-title">NASA</h1>
+        <Image
+          className="nav-title"
+          src="/images/nasa-icon.png"
+          alt="logo"
+          width={45}
+          height={45}
+        />
       </Link>
       <div className="burger" onClick={() => setShowLinks(!showLinks)}>
         <div className="line1"></div>

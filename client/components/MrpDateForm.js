@@ -45,10 +45,10 @@ const MrpDateForm = () => {
         </button>
         {mrpData.length > 0 && (
           <>
-            {mrpData.slice(0, 25).map((val) => (
+            {mrpData.slice(0, mrpData.length).map((val) => (
               <>
-                <img className={`nasa-img`} src={val.img_src} />
                 <h1 className="title">{val.camera.full_name}</h1>
+                <img className={`nasa-img`} src={val.img_src} />
               </>
             ))}
           </>

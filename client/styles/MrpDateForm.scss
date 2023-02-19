@@ -1,6 +1,6 @@
 @import "./Variables.scss";
 .MrpDateForm {
-  margin-top: 100px;
+  margin-top: 125px;
   margin-bottom: 75px;
   min-height: 55vh;
 
@@ -15,7 +15,6 @@
   button {
     width: 250px;
     height: 55px;
-    margin-bottom: 25px;
     background-color: $stark-white;
   }
 
@@ -28,11 +27,9 @@
     justify-content: center;
     align-items: center;
     margin: 0 auto;
-    height: 80vh;
+    height: 50vh;
     width: auto;
-    // width: 80vw;
     padding: 0px;
-
     object-fit: contain;
   }
 
@@ -59,5 +56,11 @@
     margin: 0 auto;
     max-width: 70vw;
     margin-bottom: 25px;
+  }
+
+  @media (max-width: 900px) {
+    .nasa-img {
+      max-width: 80vw;
+    }
   }
 }

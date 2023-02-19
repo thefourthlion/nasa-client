@@ -1,7 +1,7 @@
 @import "./Variables.scss";
 
 .ApodDateForm {
-  margin-top: 100px;
+  margin-top: 125px;
   margin-bottom: 75px;
   min-height: 55vh;
 
@@ -15,7 +15,7 @@
   button {
     width: 250px;
     height: 55px;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
     background-color: $stark-white;
   }
 
@@ -32,7 +32,6 @@
     width: auto;
     // width: 80vw;
     padding: 0px;
-
     object-fit: contain;
   }
 
@@ -52,12 +51,18 @@
   }
 
   .title {
-    margin: 25px 0;
+    margin: 0 0 25px 0;
   }
 
   .explanation {
     margin: 0 auto;
     max-width: 70vw;
-    margin-bottom: 25px;
+    margin-top: 25px;
+  }
+
+  @media (max-width: 900px) {
+    .nasa-img {
+      max-width: 80vw;
+    }
   }
 }
