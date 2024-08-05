@@ -1,0 +1,12 @@
+services:
+  nasa-client:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: nasa-client
+    ports:
+      - "4016:4016"
+    environment:
+      - PORT=4016
+    volumes:
+      - ./:/nasa-client
