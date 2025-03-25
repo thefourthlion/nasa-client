@@ -1,0 +1,26 @@
+{
+  "name": "generate-mongo-db",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "latest",
+    "dotenv": "latest",
+    "express": "latest",
+    "express-session": "latest",
+    "jsonwebtoken": "latest",
+    "mongoose": "latest",
+    "mongoose-findorcreate": "latest",
+    "nodemon": "latest",
+    "passport": "latest",
+    "passport-local": "latest",
+    "passport-local-mongoose": "latest"
+  }
+}
