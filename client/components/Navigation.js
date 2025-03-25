@@ -39,6 +39,10 @@ export default function Navigation() {
         <li className="nav-item">
           <Link href="/Mrp">MRP</Link>
         </li>
+        
+        <li className="nav-item">
+          <Link href="/Search">Search</Link>
+        </li>
       </ul>
 
       <Link href="/" className="pc-none"></Link>

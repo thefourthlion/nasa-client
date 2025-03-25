@@ -1,10 +1,10 @@
 import React from "react";
-import ApodDateForm from "../components/ApodDateForm";
+import Scroll from "../components/Scroll";
 const Apod = () => {
   return (
     <div className="Apod">
       <div className="container">
-        <ApodDateForm />
+        <Scroll />
       </div>
     </div>
   );

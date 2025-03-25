@@ -6,6 +6,8 @@ import "../styles/Navigation.scss";
 import "../styles/EpicDateForm.scss";
 import "../styles/ApodDateForm.scss";
 import "../styles/globals.scss";
+import "../styles/Scroll.scss";
+import "../styles/Search.scss";
 import Navigation from "../components/Navigation";
 function MyApp({ Component, pageProps }) {
   return (
