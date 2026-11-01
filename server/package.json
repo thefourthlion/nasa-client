@@ -1,26 +1,17 @@
 {
-  "name": "generate-mongo-db",
+  "name": "nasa-api",
   "version": "1.0.0",
-  "description": "",
+  "private": true,
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "node index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "cors": "latest",
-    "dotenv": "latest",
-    "express": "latest",
-    "express-session": "latest",
-    "jsonwebtoken": "latest",
-    "mongoose": "latest",
-    "mongoose-findorcreate": "latest",
-    "nodemon": "latest",
-    "passport": "latest",
-    "passport-local": "latest",
-    "passport-local-mongoose": "latest"
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.22.3",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
+    "mongoose": "^8.19.2"
   }
 }

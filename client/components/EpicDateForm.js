@@ -1,24 +1,36 @@
-import React, { useState, useEffect } from "react";
-import Axios from "axios";
-const key = "fZZsNoM9UQAPoTXWMG3Uf5Yi0qiGIVDTdYSynBgS";
+import { useState } from "react";
+import { apiUrl, safeNasaUrl } from "../lib/api";
+
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
 const EpicDateForm = () => {
   const [chosenDate, setChosenDate] = useState("");
+  const [images, setImages] = useState([]);
+  const [error, setError] = useState("");
 
-  const [apodData, setApodData] = useState({});
-  const today = new Date();
-  const dd = today.getDate();
-  const mm = today.getMonth() + 1;
-  const yyyy = today.getFullYear();
-
-  const todaysDate = `${yyyy}-${mm}-${dd}`;
-
-  const getImage = () => {
-    Axios.get(
-      `https://api.nasa.gov/EPIC/api/natural/date/${chosenDate}/?api_key=${key}`
-    ).then((res) => {
-      const data = res.data;
-      setApodData(data);
-    });
+  const getImage = async () => {
+    if (!DATE_RE.test(chosenDate)) {
+      setError("Choose a date.");
+      setImages([]);
+      return;
+    }
+    setError("");
+    try {
+      const response = await fetch(apiUrl(`/api/nasa/epic?date=${chosenDate}`));
+      if (!response.ok) {
+        setError("No Earth image is available for that date.");
+        setImages([]);
+        return;
+      }
+      const data = await response.json();
+      setImages(Array.isArray(data) ? data : []);
+      if (Array.isArray(data) && data.length === 0) {
+        setError("No Earth image is available for that date.");
+      }
+    } catch {
+      setError("Could not reach the server.");
+      setImages([]);
+    }
   };
 
   return (
@@ -32,22 +44,25 @@ const EpicDateForm = () => {
             setChosenDate(e.target.value);
           }}
         />
-
         <br />
-
-        <button
-          onClick={() => {
-            getImage();
-          }}
-        >
+        <button onClick={getImage} type="button">
           Search Image
         </button>
-
-        <img className={`nasa-img`} src={apodData.hdurl} />
-        <h1 className="title">{apodData.title}</h1>
-        <h2 className="explanation"> {apodData.explanation}</h2>
+        {error ? <h2 className="explanation">{error}</h2> : null}
+        {images.map((item) => {
+          const src = safeNasaUrl(item.url);
+          if (!src) return null;
+          return (
+            <div key={item.image}>
+              <img className="nasa-img" src={src} alt={item.caption || "EPIC Earth image"} />
+              <h1 className="title">{item.date}</h1>
+              <h2 className="explanation">{item.caption}</h2>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 };
+
 export default EpicDateForm;

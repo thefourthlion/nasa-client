@@ -1,25 +1,35 @@
-import React, { useState, useEffect } from "react";
-import Axios from "axios";
-const key = "fZZsNoM9UQAPoTXWMG3Uf5Yi0qiGIVDTdYSynBgS";
+import { useState } from "react";
+import { apiUrl, safeNasaUrl } from "../lib/api";
+
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
 const MrpDateForm = () => {
   const [chosenDate, setChosenDate] = useState("");
+  const [photos, setPhotos] = useState([]);
+  const [error, setError] = useState("");
 
-  const [mrpData, setMrpData] = useState({});
-  const today = new Date();
-  const dd = today.getDate();
-  const mm = today.getMonth() + 1;
-  const yyyy = today.getFullYear();
-
-  const todaysDate = `${yyyy}-${mm}-${dd}`;
-
-  const getImage = () => {
-    Axios.get(
-      `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?earth_date=${chosenDate}&api_key=${key}`
-    ).then((res) => {
-      const data = res.data;
-      setMrpData(data.photos);
-      console.log(data.photos);
-    });
+  const getImage = async () => {
+    if (!DATE_RE.test(chosenDate)) {
+      setError("Choose a date.");
+      setPhotos([]);
+      return;
+    }
+    setError("");
+    try {
+      const response = await fetch(apiUrl(`/api/nasa/mars?date=${chosenDate}`));
+      if (!response.ok) {
+        setError("No Mars photos are available for that date.");
+        setPhotos([]);
+        return;
+      }
+      const data = await response.json();
+      const list = Array.isArray(data) ? data : [];
+      setPhotos(list);
+      if (list.length === 0) setError("No Mars photos are available for that date.");
+    } catch {
+      setError("Could not reach the server.");
+      setPhotos([]);
+    }
   };
 
   return (
@@ -33,30 +43,24 @@ const MrpDateForm = () => {
             setChosenDate(e.target.value);
           }}
         />
-
         <br />
-
-        <button
-          onClick={() => {
-            getImage();
-          }}
-        >
+        <button onClick={getImage} type="button">
           Search Image
         </button>
-        {mrpData.length > 0 && (
-          <>
-            {mrpData.slice(0, mrpData.length).map((val) => (
-              <>
-                <h1 className="title">{val.camera.full_name}</h1>
-                <img className={`nasa-img`} src={val.img_src} />
-              </>
-            ))}
-          </>
-        )}
-
-        {/* <h2 className="explanation"> {mrpData.explanation}</h2> */}
+        {error ? <h2 className="explanation">{error}</h2> : null}
+        {photos.map((photo) => {
+          const src = safeNasaUrl(photo.img_src);
+          if (!src) return null;
+          return (
+            <div key={photo.id}>
+              <h1 className="title">{photo.camera}</h1>
+              <img className="nasa-img" src={src} alt={photo.camera || "Mars rover photo"} />
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 };
+
 export default MrpDateForm;
