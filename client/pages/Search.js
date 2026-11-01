@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
+import { isAllowedUrl } from "../lib/api";
+
+const SEARCH_HOSTS = ["images-api.nasa.gov"];
+const MEDIA_HOSTS = ["images-assets.nasa.gov"];
+const MEDIA_TYPES = new Set(["image", "audio", "video"]);
+
+function allowedSearchUrl(value) {
+  return isAllowedUrl(value, SEARCH_HOSTS);
+}
+
+function allowedMediaUrl(value) {
+  return isAllowedUrl(value, MEDIA_HOSTS);
+}
 
 export default function Search() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -25,9 +38,23 @@ export default function Search() {
   const searchNASA = async (url) => {
     setLoading(true);
     setError(null);
+
+    let requestUrl = "";
+    try {
+      const parsed = new URL(url);
+      if (parsed.protocol === "http:") parsed.protocol = "https:";
+      requestUrl = parsed.toString();
+    } catch {
+      requestUrl = "";
+    }
+    if (!allowedSearchUrl(requestUrl)) {
+      setError("Blocked an unexpected search URL.");
+      setLoading(false);
+      return [];
+    }
     
     try {
-      const response = await fetch(url);
+      const response = await fetch(requestUrl);
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
@@ -50,9 +77,10 @@ export default function Search() {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (!searchTerm.trim()) return;
+    const query = searchTerm.trim();
+    if (!query || query.length > 200 || !MEDIA_TYPES.has(mediaType)) return;
 
-    const url = `https://images-api.nasa.gov/search?q=${encodeURIComponent(searchTerm)}&media_type=${mediaType}`;
+    const url = `https://images-api.nasa.gov/search?q=${encodeURIComponent(query)}&media_type=${mediaType}`;
     const searchResults = await searchNASA(url);
     setResults(searchResults);
     setCurrentPage(1);
@@ -76,7 +104,9 @@ export default function Search() {
         link.rel === "preview" || link.render === "image"
       );
       
-      if (!imageLink) return <div className="no-media">No preview available</div>;
+      if (!imageLink || !allowedMediaUrl(imageLink.href)) {
+        return <div className="no-media">No preview available</div>;
+      }
       
       return (
         <div className="image-container">
@@ -223,15 +253,18 @@ function AudioPlayer({ nasaId, collectionUrl, title }) {
   useEffect(() => {
     async function fetchAudioUrl() {
       try {
-        // First fetch the collection to get the actual audio files
+        if (!allowedMediaUrl(collectionUrl)) return;
         const response = await fetch(collectionUrl);
         const collection = await response.json();
+        if (!Array.isArray(collection)) return;
         
         // Find a suitable audio file (preferably mp3)
         const audioFile = collection.find(file => 
-          file.toLowerCase().endsWith('.mp3') || 
+          typeof file === "string" &&
+          allowedMediaUrl(file) &&
+          (file.toLowerCase().endsWith('.mp3') || 
           file.toLowerCase().endsWith('.wav') || 
-          file.toLowerCase().endsWith('.m4a')
+          file.toLowerCase().endsWith('.m4a'))
         );
         
         if (audioFile) {
@@ -276,19 +309,24 @@ function VideoPlayer({ nasaId, collectionUrl, title }) {
   useEffect(() => {
     async function fetchVideoUrl() {
       try {
-        // First fetch the collection to get the actual video files
+        if (!allowedMediaUrl(collectionUrl)) return;
         const response = await fetch(collectionUrl);
         const collection = await response.json();
+        if (!Array.isArray(collection)) return;
         
         // Find a suitable video file
         const videoFile = collection.find(file => 
-          file.toLowerCase().endsWith('.mp4') || 
+          typeof file === "string" &&
+          allowedMediaUrl(file) &&
+          (file.toLowerCase().endsWith('.mp4') || 
           file.toLowerCase().endsWith('.mov') || 
-          file.toLowerCase().endsWith('.avi')
+          file.toLowerCase().endsWith('.avi'))
         );
         
         // Find a thumbnail
         const thumbFile = collection.find(file => 
+          typeof file === "string" &&
+          allowedMediaUrl(file) &&
           file.toLowerCase().includes('thumb') && 
           (file.toLowerCase().endsWith('.jpg') || file.toLowerCase().endsWith('.png'))
         );

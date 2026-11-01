@@ -1,20 +1,27 @@
-# what img to do you want to pull
-FROM node:17-alpine
+FROM node:22-alpine AS deps
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
 
-# where to work from, what everything will have access to
-WORKDIR /nasa-client
-
-# copy package.json to cache
-COPY package.json .
-
-# commands to run when booting img
-RUN npm install
-
-# copy file from root dir to root dir
+FROM node:22-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+ARG NEXT_PUBLIC_API_URL=http://localhost:4017
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN npm run build
 
-# which port to use and which port to map it to
+FROM node:22-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=4016
+ENV HOSTNAME=0.0.0.0
+RUN addgroup -S -g 1001 nodejs && adduser -S -u 1001 -G nodejs nextjs
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+USER nextjs
 EXPOSE 4016
-
-# what commands to run when container is up
-CMD ["npm", "run","dev"]
+CMD ["node", "server.js"]

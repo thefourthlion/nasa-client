@@ -1,12 +1,22 @@
+# Web UI. The browser calls NEXT_PUBLIC_API_URL (default http://localhost:4017).
+# Full stack: from the repo root, `docker compose up --build`.
+
 services:
   nasa-client:
     build:
-      context: ./
+      context: .
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:4017}
+    image: nasa-client
     container_name: nasa-client
+    restart: unless-stopped
+    init: true
+    security_opt:
+      - no-new-privileges:true
     ports:
       - "4016:4016"
     environment:
-      - PORT=4016
-    volumes:
-      - ./:/nasa-client
+      PORT: "4016"
+      HOSTNAME: 0.0.0.0
+      NODE_ENV: production

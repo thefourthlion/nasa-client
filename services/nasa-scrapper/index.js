@@ -2,8 +2,9 @@ const axios = require('axios');
 const path = require('path');
 const fs = require('fs').promises;
 
-// NASA APOD API key
-const apiKey = ' ';
+const apiKey = process.env.NASA_API_KEY || "";
+const ingestToken = process.env.INGEST_TOKEN || "";
+const apiBase = process.env.API_BASE_URL || "http://localhost:4017";
 
 // Cache file to store already processed dates
 const CACHE_FILE = path.join(__dirname, 'processed_dates.json');
@@ -18,9 +19,12 @@ const nasaApi = axios.create({
 });
 
 const localApi = axios.create({
-  baseURL: 'http://localhost:3002',
+  baseURL: apiBase,
   timeout: 5000,
-  headers: {'Connection': 'keep-alive'},
+  headers: {
+    'Connection': 'keep-alive',
+    'X-Ingest-Token': ingestToken,
+  },
   httpAgent: new (require('http').Agent)({ keepAlive: true }),
   httpsAgent: new (require('https').Agent)({ keepAlive: true })
 });
@@ -293,6 +297,10 @@ function getStartDate() {
 // Main function
 async function main() {
   try {
+    if (!apiKey || !ingestToken) {
+      console.error("NASA_API_KEY and INGEST_TOKEN are required");
+      process.exit(1);
+    }
     // Get start date from command line or use default
     const startDate = getStartDate();
     
